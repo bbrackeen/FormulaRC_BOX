@@ -35,5 +35,3 @@ Connect your Arduino board to your computer and upload the sketch using the Ardu
 ## More Reading 
 
 See the PDF file for my tablet scribble, but it has pictures, and explains some finer details.
-
-- Billy
