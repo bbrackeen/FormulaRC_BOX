@@ -6,19 +6,18 @@
   Steering Sensitivity:
   The exponent value can be adjusted to control the sensitivity
   of the steering input.
-  * The higher the exponent, the more sensitive the steering will be.
-  * The lower the exponent, the less sensitive the steering will be.
+  * The higher the exponent, the more sensitive the steering will be. Twitchy.
+  * The lower the exponent, the less sensitive the steering will be. Sluggish.
   The exponent value should be greater than 1 to have an effect.
-  The default value 1.65 works very well for F1 2024.
+  The default value 1.64 works very well for F1 2024.
 
-  Accellorator and brake sensitivity: (Aux3, Channel 6, Joystick Z Axis)
-  The curve is logit based. The AUX3 channel can be used to adjust the sensitivity
+  Accelerator and brake sensitivity: (Aux3, Channel 6, Joystick Z Axis)
+  The curve is a logit based curve. The AUX3 channel can be used to adjust the sensitivity
   of the throttle and brake.
-  * The higher the AUX3 value, the more sensitive the throttle and brake will be.
-  * The lower the AUX3 value, the less sensitive the throttle and brake will be.
+  * The higher the AUX3 value, the more sensitive the throttle and brake will be. Dry conditions.
+  * The lower the AUX3 value, the less sensitive the throttle and brake will be. Wet conditions.
 
   @author: Billy.Brackeen@live.com
-  @date: 2024-07-14
 */ 
 
 // Include libraries
@@ -32,7 +31,7 @@
 // Main configuration settings.
 bool inputLoggingEnabled = false; // Enable debug logging
 bool serialLoggingEnabled = false; // Enable serial logging
-bool dipSwitchEnabled = true; // Enable dip switch settings
+bool dipSwitchEnabled = false; // Enable dip switch settings
 bool steeringExponential = true; // Enable steering exponential, dip switch 1
 bool acceleratorCurve = true; // Enable accelerator curve, dip switch 2
 bool brakeCurve = true; // Enable brake curve, dip switch 3
@@ -104,7 +103,7 @@ ServoInputPin<STEERING_SIGNAL_PIN> steering(PULSE_MIN, PULSE_MAX); // Steering S
 ServoInputPin<AUX0_SIGNAL_PIN> aux0(PULSE_MIN, PULSE_MAX); // AUX0 Setup (Channel 3) Button 1
 ServoInputPin<AUX1_SIGNAL_PIN> aux1(PULSE_MIN, PULSE_MAX); // AUX1 Setup (Channel 4) Button 2
 ServoInputPin<AUX2_SIGNAL_PIN> aux2(PULSE_MIN, PULSE_MAX); // AUX2 Setup (Channel 5) Button 3
-ServoInputPin<AUX3_SIGNAL_PIN> aux3(PULSE_MIN, PULSE_MAX); // AUX3 Setup (Channel 6) X
+ServoInputPin<AUX3_SIGNAL_PIN> aux3(PULSE_MIN, PULSE_MAX); // AUX3 Setup (Channel 6) X Axis
 
 // Variables to hold the current input values per-cycle
 int steeringInput = 0;
@@ -158,7 +157,7 @@ void setup() {
 
   bool ledState = false;
 
-  // wait for all signals to be ready
+  // Wait for all signals to be ready
 	while (!ServoInput.available()) {
     digitalWrite(RXLED, ledState ? ON : OFF); // Toggle the LED
     digitalWrite(TXLED, ledState ? OFF : ON); // Toggle the LED
@@ -172,7 +171,7 @@ void setup() {
   digitalWrite(TXLED, OFF);
   delay(500);
 
-  // Slash the LED 3 times to indicate that the receiver is ready
+  // Flash the LED 3 times to indicate that the receiver is ready
   for (int i = 0; i < 3; i++) {
     digitalWrite(RXLED, ON);
     digitalWrite(TXLED, ON);
@@ -287,7 +286,7 @@ void setSteering(int value) {
 }
 
 void processThrottle() {
-  // Get the trottle position -1000-0 Brake 0-1000 Accellorator.
+  // Get the throttle position -1000-0 Brake 0-1000 Accelerator.
   throttleInput = throttle.map(YAXIS_MIN, YAXIS_MAX);
   write(", T_In: ");
   write(throttleInput);
