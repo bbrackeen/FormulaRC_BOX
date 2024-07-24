@@ -46,4 +46,4 @@ See the [PDF file](https://github.com/bbrackeen/FormulaRC_BOX/blob/main/Formula%
 
 ## Aknowledgements
 
--- https://www.micropanoply.com/arduino/arduino-joystick First project I found that got me started in this.
+- https://www.micropanoply.com/arduino/arduino-joystick First project I found that got me started in this.
