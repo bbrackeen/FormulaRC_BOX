@@ -121,6 +121,12 @@ int lastAux3Output = 0;
 
 // Adjustment factors
 float steeringExponent = 1.64; // F1-24 exponent, adjust based on desired sensitivity
+float curveAdjustment = 1.0f; // Example curve adjustment (0.5 to 1.5) 1.0 is neutral
+
+// Custom map function for floating-point values
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max) {
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+}
 
 void setup() {
 	Serial.begin(115200);
@@ -329,19 +335,67 @@ float logit(float x) {
 }
 
 // Adjusted Logit-curve function
-float adjustedLogitCurve(float input, float adjustment) {
+float adjustedLogitCurve(float input, float adjustment, float blendFactor) {
     // Normalize input from 0-1000 to 0 to 1 for logit compatibility
     float normalizedInput = (input / 1000.0f);
     // Ensure the input is within the bounds for the logit function
     normalizedInput = max(0.0001f, min(0.9999f, normalizedInput));
     // Apply logit function directly on normalized input
     float logitOutput = logit(normalizedInput);
-    // Adjust the curve based on the adjustment parameter if needed
-    // Note: Adjustment logic might need to be re-evaluated for the logit function
-    // Map the logit output back to a suitable range, e.g., 0-1000
-    // This mapping depends on the expected range of logit outputs and the desired application behavior
-    float adjustedOutput = (logitOutput + 6) / 12.0f * 1000.0f; // Example mapping
-    return adjustedOutput;
+    // Adjust the curve based on the adjustment parameter
+    float adjustedLogitOutput = logitOutput * adjustment;
+    // Map the adjusted logit output back to a suitable range, e.g., 0-1000
+    float adjustedOutput = (adjustedLogitOutput + 6) / 12.0f * 1000.0f; // Example mapping
+    // Blend the adjusted output with the original input
+    float blendedOutput = (blendFactor * adjustedOutput) + ((1.0f - blendFactor) * input);
+    // Ensure the result is within the range [0, 1000]
+    blendedOutput = max(0.0f, min(1000.0f, blendedOutput));
+    return blendedOutput;
+}
+
+void printAdjustedLogitCurve() {
+  // Print the adjustedLogitCurve curve for the range 0-1000
+  // With the blends from -.5 to 1.5
+  Serial.println("-0.5, -0.25, -0.1, i, 0.1, 0.25, 0.5, 0.75, 1.0, 1.25, 1.5");
+  for (int i = 0; i <= 1000; i++) {
+    float adjustedOutput_n50 = adjustedLogitCurve(i, curveAdjustment, -.5);
+    float adjustedOutput_n25 = adjustedLogitCurve(i, curveAdjustment, -.25);
+    float adjustedOutput_n10 = adjustedLogitCurve(i, curveAdjustment, -.1);
+    float adjustedOutput_10 = adjustedLogitCurve(i, curveAdjustment, .1);
+    float adjustedOutput_25 = adjustedLogitCurve(i, curveAdjustment, .25);
+    float adjustedOutput_50 = adjustedLogitCurve(i, curveAdjustment, .5);
+    float adjustedOutput_75 = adjustedLogitCurve(i, curveAdjustment, .75);
+    float adjustedOutput_100 = adjustedLogitCurve(i, curveAdjustment, 1.0);
+    float adjustedOutput_125 = adjustedLogitCurve(i, curveAdjustment, 1.25);
+    float adjustedOutput_150 = adjustedLogitCurve(i, curveAdjustment, 1.5);
+
+    Serial.print(adjustedOutput_n50);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_n25);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_n10);
+    Serial.print(", ");
+    Serial.print(i);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_10);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_25);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_50);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_75);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_100);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_125);
+    Serial.print(", ");
+    Serial.print(adjustedOutput_150);
+
+
+    Serial.println();
+
+
+  }
 }
 
 void adjustAccelerator(int value) {
@@ -354,11 +408,11 @@ void adjustAccelerator(int value) {
 
   // Apply the throttle logarithm if enabled
   if (acceleratorCurve && auxInput[3] > 0 ) {
-    // Normalize auxInput[3] from its range to .5 to 1.5 for adjustment
-    float aux3Adjustment = (auxInput[3] - ZAXIS_MIN) / (float)(ZAXIS_MAX - ZAXIS_MIN) * 1.0f + 0.5f;
+    // map auxInput[3] from its range of 0-1000 to -.1 to 1.5 for the blend factor
+    float aux3Adjustment = mapFloat(auxInput[3], 0.0f, 1000.0f, -0.1f, 1.5f);
 
     // Apply the adjusted Logit-curve to the accelerator input
-    float adjustedInput = adjustedLogitCurve(value, aux3Adjustment);
+    float adjustedInput = adjustedLogitCurve(value, curveAdjustment, aux3Adjustment);
     
     // Map the adjusted input back to 0-1000 range (or any other desired range)
     int outputValue = (int)(adjustedInput + 0.5f); // Round to the nearest integer
@@ -407,11 +461,11 @@ void adjustBrake(int value) {
 
   // Apply the throttle logarithm if enabled
   if (brakeCurve && auxInput[3] > 0) {
-    // Normalize auxInput[3] from its range from x to 1.5 for adjustment
-    float aux3Adjustment = (auxInput[3] - ZAXIS_MIN) / (float)(ZAXIS_MAX - ZAXIS_MIN) * 1.0f + 0.5f;
+    // map auxInput[3] from its range of 0-1000 to -.1 to 1.5 for the blend factor
+    float aux3Adjustment = mapFloat(auxInput[3], 0.0f, 1000.0f, -0.1f, 1.5f);
 
     // Apply the adjusted Logit-curve to the accelerator input
-    float adjustedInput = adjustedLogitCurve(value, aux3Adjustment);
+    float adjustedInput = adjustedLogitCurve(value, curveAdjustment, aux3Adjustment);
     
     // Map the adjusted input back to 0-1000 range (or any other desired range)
     int outputValue = (int)(adjustedInput + 0.5f); // Round to the nearest integer
@@ -510,6 +564,10 @@ void pressButton(int button) {
   buttonState[button] = true;
   
   toggleTXLED();
+
+  if (serialLoggingEnabled) {
+    printAdjustedLogitCurve();
+  }
 
   if (serialLoggingEnabled) {
     Serial.print("B");
