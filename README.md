@@ -7,9 +7,10 @@ FormulaRC_BOX is an Arduino-based project designed to allow a familiar remote co
 The main advantage is that; being this is not using XInput, the controller is treated as a steering wheel instead of a gamepad. There seems to be two different input schemes in most racing games where XBox controllers are treated with a input buffer (Lagging your input to make it easier to control) instead of direct input as you would expect with a wheel. As a result you get instant steering control just as you would with a sim wheel.
 
 ## Game Support (Tested)
--- F1 2024 - Using the AUX set to > 0 for throttle.
--- Need for Speed 2016 - Setting AUX to 0 switches to linier accelerator output and buttons send keydown/keyup for (look Back, Emergency Brake, Nitrous). Works very weel, lot of fun. NFS Heat refuses to start after menu screen.
--- Assetto Corsa and pretty much anything with configurable joystick inputs.
+
+- F1 2024 - Using the AUX set to > 0 for throttle.
+- Need for Speed 2016 - Setting AUX to 0 switches to linier accelerator output and buttons send keydown/keyup for (look Back, Emergency Brake, Nitrous). Works very weel, lot of fun. NFS Heat refuses to start after menu screen.
+- Assetto Corsa and pretty much anything with configurable joystick inputs.
 
 ## Features
 
