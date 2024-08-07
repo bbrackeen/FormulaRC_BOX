@@ -1,6 +1,15 @@
 # FormulaRC_BOX
 
-FormulaRC_BOX is an Arduino-based project designed to allow a familiar remote control driving experience with modern driving simulators. It provides a customizable interface for adjusting the throttle curve, steering sensitivity, and other parameters to suit different driving conditions and games. Generally, everything is configured for a DumboRC X6PM-350 6 channel receiver which is cheap, comfortable, and has a good amount of channels (3 toggle buttons, and 1 range knob that I use for adjusting throttle/brake curves during the game). Although any modern RC transmitter should work, along with your own hours of experience if you come from an RC Car background. So keep in mind as I refer to the channels, generally I am speaking of the configuration of the X6PM. Also keep in mind my personal goal is racing in EA F1, so my tuning is based on that platform, but should apply to any platform that takes basic joystick inputs.
+FormulaRC_BOX is an Arduino-based project designed to allow a familiar remote control driving experience with modern driving simulators. It provides a customizable interface for adjusting the throttle curve, steering sensitivity, and other parameters to suit different driving conditions and games. Generally, everything is configured for a DumboRC X6PM-350 6 channel receiver which is cheap, comfortable, and has a good amount of channels (3 toggle buttons, and 1 range knob that I use for adjusting throttle/brake curves during the game). Although any modern RC transmitter should work, along with your own hours of experience if you come from an RC Car background. So keep in mind as I refer to the channels, generally I am speaking of the configuration of the X6PM. Also keep in mind my personal goal is racing in VR, so my tuning is based on that platform, but should apply to any platform that takes basic joystick inputs. 
+
+## Why not XInput? 
+
+The main advantage is that; being this is not using XInput, the controller is treated as a steering wheel instead of a gamepad. There seems to be two different input schemes in most racing games where XBox controllers are treated with a input buffer (Lagging your input to make it easier to control) instead of direct input as you would expect with a wheel. As a result you get instant steering control just as you would with a sim wheel.
+
+## Game Support (Tested)
+-- F1 2024 - Using the AUX set to > 0 for throttle.
+-- Need for Speed 2016 - Setting AUX to 0 switches to linier accelerator output and buttons send keydown/keyup for (look Back, Emergency Brake, Nitrous). Works very weel, lot of fun. NFS Heat refuses to start after menu screen.
+-- Assetto Corsa and pretty much anything with configurable joystick inputs.
 
 ## Features
 
