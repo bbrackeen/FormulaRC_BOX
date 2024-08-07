@@ -31,6 +31,7 @@ The main advantage is that; being this is not using XInput, the controller is tr
 - PinChangeInterrupt.h
 - ServoInput.h
 - Joystick.h
+- Keyboard.h
 
 ## Installation
 
