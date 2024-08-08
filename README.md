@@ -14,8 +14,8 @@ The main advantage is that; being this is not using XInput, the controller is tr
 
 ## Game Play Samples
 
-https://youtu.be/XU980FHxnNM - F1 2024 Monza Lap in VR
-https://youtu.be/Qxms8kgLgbo - NFS (2016)
+- https://youtu.be/XU980FHxnNM - F1 2024 Monza Lap in VR
+- https://youtu.be/Qxms8kgLgbo - NFS (2016)
 
 ## Features
 
