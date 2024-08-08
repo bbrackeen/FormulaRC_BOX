@@ -12,6 +12,11 @@ The main advantage is that; being this is not using XInput, the controller is tr
 - Need for Speed 2016 - Setting AUX to 0 switches to linier accelerator output and buttons send keydown/keyup for (look Back, Emergency Brake, Nitrous). Works very weel, lot of fun. NFS Heat refuses to start after menu screen.
 - Assetto Corsa and pretty much anything with configurable joystick inputs.
 
+## Game Play Samples
+
+https://youtu.be/XU980FHxnNM - F1 2024 Monza Lap in VR
+https://youtu.be/Qxms8kgLgbo - NFS (2016)
+
 ## Features
 
 - **Customizable Throttle Curve:** Adjust the throttle response curve to match your driving style or the specific requirements of your car. The throttle curve is based on a logit curve where low throttle stays relatively high, while center to high has the most amount of resolution snapping to full throttle in the very last 90% depending on how you set the AUX value in the curve (AUX value being channel 5). 50% is a good general predictable middle where you can hold traction in high-speed corners and snap to full throttle on the way out. Where 10% is more centered and seems to work best with a wet tire configuration where you need a slower ramp-up and full throttle almost doesn't exist until nearly full throttle.
